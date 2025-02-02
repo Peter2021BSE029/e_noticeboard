@@ -1,0 +1,398 @@
+[
+  {
+    "fid": 0,
+    "name": "MUST Upper Faculty",
+    "lattitude": -0.61523068,
+    "longitude": 30.6569830469
+  },
+  {
+    "fid": 1,
+    "name": "MUST Lower Faculty",
+    "lattitude": -0.6171466685,
+    "longitude": 30.6564628554
+  },
+  {
+    "fid": 2,
+    "name": "MUST Residents",
+    "lattitude": -0.615447045,
+    "longitude": 30.6565872221
+  },
+  {
+    "fid": 3,
+    "name": "MUST Residents",
+    "lattitude": -0.6153458,
+    "longitude": 30.65703945
+  },
+  {
+    "fid": 4,
+    "name": "MUST Residents",
+    "lattitude": -0.6155894024,
+    "longitude": 30.6568559295
+  },
+  {
+    "fid": 5,
+    "name": "MUST Residents",
+    "lattitude": -0.6156469,
+    "longitude": 30.6566118
+  },
+  {
+    "fid": 6,
+    "name": "MUST Residents",
+    "lattitude": -0.6155388,
+    "longitude": 30.657085
+  },
+  {
+    "fid": 7,
+    "name": "MUST Residents",
+    "lattitude": -0.6158250075,
+    "longitude": 30.6559438763
+  },
+  {
+    "fid": 8,
+    "name": "MUST Residents",
+    "lattitude": -0.6151026452,
+    "longitude": 30.6567049717
+  },
+  {
+    "fid": 9,
+    "name": "MUST Residents",
+    "lattitude": -0.6157395541,
+    "longitude": 30.6563484287
+  },
+  {
+    "fid": 10,
+    "name": "MUST Residents",
+    "lattitude": -0.6157744229,
+    "longitude": 30.6561279166
+  },
+  {
+    "fid": 11,
+    "name": "Biochemistry Laboratory",
+    "lattitude": -0.6170216191,
+    "longitude": 30.6566258288
+  },
+  {
+    "fid": 12,
+    "name": "Departments of Nursing & Community Health",
+    "lattitude": -0.61650715,
+    "longitude": 30.65648315
+  },
+  {
+    "fid": 13,
+    "name": "Main Lecture Theatre TV Room",
+    "lattitude": -0.6167451335,
+    "longitude": 30.6564255337
+  },
+  {
+    "fid": 14,
+    "name": "Pharmaceutical Lecture Rooms",
+    "lattitude": -0.617160031,
+    "longitude": 30.6563292224
+  },
+  {
+    "fid": 15,
+    "name": "Pharmacy & Pharmacology Offices",
+    "lattitude": -0.61741835,
+    "longitude": 30.6565201
+  },
+  {
+    "fid": 16,
+    "name": "Milk Hygiene Laboratory & Departments of Biochemistry, Anatomy, Physiology",
+    "lattitude": -0.61689935,
+    "longitude": 30.6563819
+  },
+  {
+    "fid": 17,
+    "name": "Animal Research Facility A",
+    "lattitude": -0.6169033216,
+    "longitude": 30.6557096089
+  },
+  {
+    "fid": 18,
+    "name": "Science Block",
+    "lattitude": -0.6166481004,
+    "longitude": 30.6559450711
+  },
+  {
+    "fid": 19,
+    "name": "Gents' Flat",
+    "lattitude": -0.6176643835,
+    "longitude": 30.656176525
+  },
+  {
+    "fid": 20,
+    "name": "Library",
+    "lattitude": -0.6172419497,
+    "longitude": 30.656140815
+  },
+  {
+    "fid": 22,
+    "name": "Basketball Court",
+    "lattitude": -0.6153574333,
+    "longitude": 30.6561377341
+  },
+  {
+    "fid": 23,
+    "name": "Tennis Court",
+    "lattitude": -0.6154622169,
+    "longitude": 30.6558584155
+  },
+  {
+    "fid": 24,
+    "name": "Anatomy Block, Guild Office, Grants Office, Academic Registrar Block",
+    "lattitude": -0.6171222119,
+    "longitude": 30.6570600349
+  },
+  {
+    "fid": 25,
+    "name": "Administration Block",
+    "lattitude": -0.6168607722,
+    "longitude": 30.6571685112
+  },
+  {
+    "fid": 26,
+    "name": "Estates Block",
+    "lattitude": -0.6166747,
+    "longitude": 30.65721275
+  },
+  {
+    "fid": 27,
+    "name": "Faculty Of Computing and Informatics",
+    "lattitude": -0.6165051769,
+    "longitude": 30.6569853541
+  },
+  {
+    "fid": 28,
+    "name": "MUST Pitch",
+    "lattitude": -0.6150773116,
+    "longitude": 30.6578469209
+  },
+  {
+    "fid": 29,
+    "name": "Pharmacology Building",
+    "lattitude": -0.6144914537,
+    "longitude": 30.6579421805
+  },
+  {
+    "fid": 30,
+    "name": "University canteen Upper faculty",
+    "lattitude": -0.6146066197,
+    "longitude": 30.6576662064
+  },
+  {
+    "fid": 31,
+    "name": "Ladies' Flat",
+    "lattitude": -0.6178838436,
+    "longitude": 30.6566550375
+  },
+  {
+    "fid": 32,
+    "name": "Pharmaceutical Chemistry/Analysis Laboratory",
+    "lattitude": -0.61741905,
+    "longitude": 30.65687955
+  },
+  {
+    "fid": 34,
+    "name": "Faculty of Development Studies",
+    "lattitude": -0.614611989,
+    "longitude": 30.6568883421
+  },
+  {
+    "fid": 35,
+    "name": "Opthalmology Department and MUST Eye Center",
+    "lattitude": -0.6142389813,
+    "longitude": 30.6572039957
+  },
+  {
+    "fid": 37,
+    "name": "Epicentre",
+    "lattitude": -0.6173165815,
+    "longitude": 30.6571033082
+  },
+  {
+    "fid": 38,
+    "name": "Epicentre Parking",
+    "lattitude": -0.6174611813,
+    "longitude": 30.6571495751
+  },
+  {
+    "fid": 39,
+    "name": "Hospital Administration & Skin Clinic",
+    "lattitude": -0.6164301495,
+    "longitude": 30.6572702983
+  },
+  {
+    "fid": 41,
+    "name": "MUST Collaboration Volunteer Corps",
+    "lattitude": -0.6148538186,
+    "longitude": 30.6566434017
+  },
+  {
+    "fid": 42,
+    "name": "Animal Research Facility B",
+    "lattitude": -0.6168306921,
+    "longitude": 30.6554970103
+  },
+  {
+    "fid": 43,
+    "name": "CAMTech Office",
+    "lattitude": -0.6142455331,
+    "longitude": 30.6570403601
+  },
+  {
+    "fid": 44,
+    "name": "",
+    "lattitude": -0.616832885,
+    "longitude": 30.6560598169
+  },
+  {
+    "fid": 45,
+    "name": "Bus Parking Yard",
+    "lattitude": -0.6179378274,
+    "longitude": 30.6569843431
+  },
+  {
+    "fid": 46,
+    "name": "MUST Peer Project Office",
+    "lattitude": -0.6178702975,
+    "longitude": 30.655922103
+  },
+  {
+    "fid": 47,
+    "name": "Faculty of Medicine & Department of Medical Laboratory Sciences",
+    "lattitude": -0.617651071,
+    "longitude": 30.6569603237
+  },
+  {
+    "fid": 48,
+    "name": "University Canteen lower faculty",
+    "lattitude": -0.6180700392,
+    "longitude": 30.6563629485
+  },
+  {
+    "fid": 49,
+    "name": "Main Gate Security",
+    "lattitude": -0.6161411032,
+    "longitude": 30.657046077
+  },
+  {
+    "fid": 51,
+    "name": "LUMUST",
+    "lattitude": -0.6165682512,
+    "longitude": 30.6562453263
+  },
+  {
+    "fid": 52,
+    "name": "Community Based Education Programme",
+    "lattitude": -0.6166366377,
+    "longitude": 30.6562237022
+  },
+  {
+    "fid": 59,
+    "name": "L3",
+    "lattitude": -0.61712882648026,
+    "longitude": 30.65624680180921
+  },
+  {
+    "fid": 60,
+    "name": "L2",
+    "lattitude": -0.61714496134868,
+    "longitude": 30.65633016529605
+  },
+  {
+    "fid": 61,
+    "name": "L1",
+    "lattitude": -0.61717454194079,
+    "longitude": 30.65641621792763
+  },
+  {
+    "fid": 58,
+    "name": "Library Internet Room",
+    "lattitude": -0.61731975575658,
+    "longitude": 30.65617419490131
+  },
+  {
+    "fid": 63,
+    "name": "Generator Room",
+    "lattitude": -0.61640544654605,
+    "longitude": 30.65696749259868
+  },
+  {
+    "fid": 65,
+    "name": "Lab 1",
+    "lattitude": -0.6164968774671,
+    "longitude": 30.65702127549342
+  },
+  {
+    "fid": 62,
+    "name": "Lab 2",
+    "lattitude": -0.61673352220394,
+    "longitude": 30.65694060115131
+  },
+  {
+    "fid": 55,
+    "name": "Lab 3",
+    "lattitude": -0.61665822615131,
+    "longitude": 30.65591334786184
+  },
+  {
+    "fid": 54,
+    "name": "Office 4",
+    "lattitude": -0.61664746957236,
+    "longitude": 30.65587569983552
+  },
+  {
+    "fid": 53,
+    "name": "Physics Lab",
+    "lattitude": -0.61673890049342,
+    "longitude": 30.65585418667763
+  },
+  {
+    "fid": 56,
+    "name": "S403",
+    "lattitude": -0.61654528207236,
+    "longitude": 30.65597788733552
+  },
+  {
+    "fid": 70,
+    "name": "PLT",
+    "lattitude": -0.6145338018092,
+    "longitude": 30.657924828125
+  },
+  {
+    "fid": 57,
+    "name": "Science Block",
+    "lattitude": -0.61666360444079,
+    "longitude": 30.65602629194078
+  },
+  {
+    "fid": 67,
+    "name": "Grants Office",
+    "lattitude": -0.617131515625,
+    "longitude": 30.65709119325658
+  },
+  {
+    "fid": 64,
+    "name": "Guild Office",
+    "lattitude": -0.61708848930921,
+    "longitude": 30.65701589720394
+  },
+  {
+    "fid": 68,
+    "name": "Academic Registrar Block",
+    "lattitude": -0.61714765049342,
+    "longitude": 30.65714497615131
+  },
+  {
+    "fid": 66,
+    "name": "Main Gate",
+    "lattitude": -0.61607199259868,
+    "longitude": 30.65703203207236
+  },
+  {
+    "fid": 69,
+    "name": "AR's office",
+    "lattitude": -0.61689487088815,
+    "longitude": 30.65714497615131
+  }
+]
