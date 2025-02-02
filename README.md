@@ -1,0 +1,1 @@
+The E-Noticeboard is a digital platform designed for Mbarara University of Science and Technology (MUST) to enhance communication and navigation on campus. This project aims to provide a centralized hub for notices, announcements, and events, as well as a simple map feature to facilitate easy navigation.
