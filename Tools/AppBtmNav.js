@@ -5,8 +5,8 @@ import { useNavigation } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons'; // Assuming you're using Expo, otherwise use appropriate icon library
 
-import MapScreen from '../Screens/MapScreen';
 import NoticeScreen from '../Screens/NoticeScreen';
+import MapScreen from '../Screens/MapScreen';
 import ChatScreen from '../Screens/ChatScreen';
 
 const Tab = createBottomTabNavigator();
@@ -18,7 +18,7 @@ function AppBtmNav(props) {
     useEffect(() => {
         // Hide the entire header
         navigation.setOptions({
-          headerShown: false,
+          headerShown: false, // This hides the default header (the one showing the tab name)
         });
         
         // Handle back button press
@@ -39,7 +39,7 @@ function AppBtmNav(props) {
   
         return () => backHandler.remove(); // Cleanup event listener
     }, [navigation, backPressedOnce]);
-  
+
     const showToast = () => {
       Toast.show({
         type: 'info',
@@ -48,61 +48,55 @@ function AppBtmNav(props) {
         autoHide: true,
       });
     };
-  
+
     const showLoginToast = () => {
       Toast.show({
         type: 'success',
         text1: 'Welcome to MUST!',
-        text2: 'feel free to check out our events',
+        text2: 'Feel free to check out our events',
         visibilityTime: 5000,
         autoHide: true,
       });
     }
-  
+
     const [loginToastShown, setLoginToastShown] = useState(false);
     useEffect(() => {
-      if (loginToastShown) {
-        return;
-      }
-      else{
+      if (!loginToastShown) {
         showLoginToast();
         setLoginToastShown(true);
       }
-    })
+    }, [loginToastShown]);
 
     return (
         <SafeAreaView style={{flex: 1}}>
             <Tab.Navigator
                 screenOptions={({ route }) => ({
                     tabBarIcon: ({ focused }) => {
-                    let iconName;
-
-                    // Set different icon names for different tabs
-                    if (route.name === 'Map' || route.name === 'Map') {   // for home page
-                        iconName = focused ? 'map' : 'map-outline';
-                    }
-                    else if (route.name === 'Notice' || route.name === 'Notice Board') {    // for notice page
-                        iconName = focused ? 'notifications' : 'notifications-outline';
-                    }
-                    else if (route.name === 'Chat') {    // for chatbot page
-                      iconName = focused ? 'home' : 'home-outline';
-                    }
-
-                    // Set different colors and sizes based on the tab's state
-                    const iconColor = focused ? 'blue' : 'gray';
-                    const iconSize = focused ? 30 : 25;
-
-                    // You can return any component here, not just Ionicons
-                    return <Ionicons name={iconName} size={iconSize} color={iconColor} />;
+                        let iconName;
+  
+                        // Set different icon names for different tabs
+                        if (route.name === 'Map') {
+                            iconName = focused ? 'map' : 'map-outline';
+                        } else if (route.name === 'Notice') {
+                            iconName = focused ? 'notifications' : 'notifications-outline';
+                        } else if (route.name === 'Chat') {
+                            iconName = focused ? 'home' : 'home-outline';
+                        }
+  
+                        // Set different colors and sizes based on the tab's state
+                        const iconColor = focused ? 'blue' : 'gray';
+                        const iconSize = focused ? 30 : 25;
+  
+                        return <Ionicons name={iconName} size={iconSize} color={iconColor} />;
                     },
+                    headerShown: false, // Hides the header
                 })}
             >
                 <Tab.Screen name="Notice" component={NoticeScreen} />
-				<Tab.Screen name="Map" component={MapScreen} />
+                <Tab.Screen name="Map" component={MapScreen} />
                 <Tab.Screen name="Chat" component={ChatScreen} />
             </Tab.Navigator>
-
-            <Toast position='bottom' />
+            <Toast position="bottom" />
         </SafeAreaView>
     );
 }
