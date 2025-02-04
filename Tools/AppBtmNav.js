@@ -5,7 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons'; // Assuming you're using Expo, otherwise use appropriate icon library
 
-import NoticeScreen from '../Screens/NoticeScreen';
+import MyDrawer from '../Screens/NoticeScreen';
 import MapScreen from '../Screens/MapScreen';
 import ChatScreen from '../Screens/ChatScreen';
 
@@ -92,7 +92,7 @@ function AppBtmNav(props) {
                     headerShown: false, // Hides the header
                 })}
             >
-                <Tab.Screen name="Notice" component={NoticeScreen} />
+                <Tab.Screen name="Notice" component={MyDrawer} />
                 <Tab.Screen name="Map" component={MapScreen} />
                 <Tab.Screen name="Chat" component={ChatScreen} />
             </Tab.Navigator>
