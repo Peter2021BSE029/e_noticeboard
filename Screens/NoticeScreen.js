@@ -12,15 +12,43 @@ function NoticeScreen() {
       id: 1,
       title: 'Notice Title 1',
       datePosted: '2025-02-02',
-      description: 'This is the first notice...',
+      description: 'This is the first notice. I am filling this with random content to test this, so.... lalalelelelelelelele elelelelelel elelelelelelelel elelelelelele elelelelelelele leleleelelelele leleleleleelelele lelelelele',
       postedBy: 'Admin',
     },
     {
       id: 2,
       title: 'Notice Title 2',
       datePosted: '2025-02-01',
-      description: 'Second notice with more details...',
+      description: 'Second notice with more details. I am filling this with random content to test this, so.... lalalelelelelelelele elelelelelel elelelelelelelel elelelelelele elelelelelelele leleleelelelele leleleleleelelele leleleleleI am filling this with random content to test this, so.... lalalelelelelelelele elelelelelel elelelelelelelel elelelelelele elelelelelelele leleleelelelele leleleleleelelele leleleleleI am filling this with random content to test this, so.... lalalelelelelelelele elelelelelel elelelelelelelel elelelelelele elelelelelelele leleleelelelele leleleleleelelele leleleleleI am filling this with random content to test this, so.... lalalelelelelelelele elelelelelel elelelelelelelel elelelelelele elelelelelelele leleleelelelele leleleleleelelele leleleleleI am filling this with random content to test this, so.... lalalelelelelelelele elelelelelel elelelelelelelel elelelelelele elelelelelelele leleleelelelele leleleleleelelele leleleleleI am filling this with random content to test this, so.... lalalelelelelelelele elelelelelel elelelelelelelel elelelelelele elelelelelelele leleleelelelele leleleleleelelele lelelelele',
       postedBy: 'Staff Member',
+    },
+    {
+      id: 3,
+      title: 'Notice Title 1',
+      datePosted: '2025-02-02',
+      description: 'This is the first notice. I am filling this with random content to test this, so.... lalalelelelelelelele elelelelelel elelelelelelelel elelelelelele elelelelelelele leleleelelelele leleleleleelelele lelelelele',
+      postedBy: 'Admin',
+    },
+    {
+      id: 4,
+      title: 'Notice Title 1',
+      datePosted: '2025-02-02',
+      description: 'This is the first notice. I am filling this with random content to test this, so.... lalalelelelelelelele elelelelelel elelelelelelelel elelelelelele elelelelelelele leleleelelelele leleleleleelelele lelelelele',
+      postedBy: 'Admin',
+    },
+    {
+      id: 5,
+      title: 'Notice Title 1',
+      datePosted: '2025-02-02',
+      description: 'This is the first notice. I am filling this with random content to test this, so.... lalalelelelelelelele elelelelelel elelelelelelelel elelelelelele elelelelelelele leleleelelelele leleleleleelelele lelelelele',
+      postedBy: 'Admin',
+    },
+    {
+      id: 6,
+      title: 'Notice Title 1',
+      datePosted: '2025-02-02',
+      description: 'This is the first notice. I am filling this with random content to test this, so.... lalalelelelelelelele elelelelelel elelelelelelelel elelelelelele elelelelelelele leleleelelelele leleleleleelelele lelelelele',
+      postedBy: 'Admin',
     },
   ]);
 
@@ -47,10 +75,12 @@ function NoticeScreen() {
           <Text style={styles.topBarTitle}>Notice Details</Text>
         </View>
         <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-          <Text style={styles.title}>{selectedNotice.title}</Text>
-          <Text style={styles.date}>{selectedNotice.datePosted}</Text>
-          <Text style={styles.description}>{selectedNotice.description}</Text>
-          <Text style={styles.postedBy}>Posted by: {selectedNotice.postedBy}</Text>
+          <View style={styles.noticeDetailBox}>
+            <Text style={styles.title}>{selectedNotice.title}</Text>
+            <Text style={styles.date}>{selectedNotice.datePosted}</Text>
+            <Text style={styles.description}>{selectedNotice.description}</Text>
+            <Text style={styles.postedBy}>Posted by: {selectedNotice.postedBy}</Text>
+          </View>
         </ScrollView>
       </SafeAreaView>
     );
@@ -62,17 +92,7 @@ function NoticeScreen() {
       refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
     >
       <SafeAreaView style={styles.view}>
-        <View style={styles.topBar}>
-          <TouchableOpacity onPress={() => {}}>
-            <Ionicons name="menu" size={24} color="black" />
-          </TouchableOpacity>
-          <Text style={styles.topBarTitle}>Notice Board</Text>
-          <View style={styles.iconsContainer}>
-            <TouchableOpacity onPress={() => handleSearchChange('')}>
-              <Ionicons name="search" size={24} color="black" />
-            </TouchableOpacity>
-          </View>
-        </View>
+
         <TextInput
           style={styles.searchInput}
           placeholder="Search notices..."
@@ -190,6 +210,7 @@ const styles = StyleSheet.create({
   topBarTitle: { fontSize: 18, fontWeight: 'bold', color: '#333' },
   iconsContainer: { flexDirection: 'row', alignItems: 'center' },
   noticeBox: { marginBottom: 20, padding: 15, backgroundColor: '#f1f1f1', borderRadius: 8 },
+  noticeDetailBox: { margin: 20, padding: 20, backgroundColor: '#ffffff', borderRadius: 10, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 4, elevation: 5 },
   title: { fontSize: 18, fontWeight: 'bold', color: '#333' },
   date: { fontSize: 14, color: '#666' },
   description: { fontSize: 16, color: '#333' },
