@@ -1,64 +1,55 @@
 import '../gesture-handler';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, RefreshControl, SafeAreaView, TextInput, Alert, BackHandler } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
+import { database, onValue, ref } from '../Firebase/firebase'; // Import Firebase modules
+
+
+import MapScreen from './MapScreen';
+import AdminBtmNav from '../Tools/AdminBtmNav';
+import AboutUsScreen from './AboutScreen';
+import LoginScreen from './LoginScreen';
+
+const Drawer = createDrawerNavigator();
 
 // NoticeScreen Component
 function NoticeScreen() {
-  const [notices, setNotices] = useState([
-    {
-      id: 1,
-      title: 'Notice Title 1',
-      datePosted: '2025-02-02',
-      description: 'This is the first notice. I am filling this with random content to test this, so.... lalalelelelelelelele elelelelelel elelelelelelelel elelelelelele elelelelelelele leleleelelelele leleleleleelelele lelelelele',
-      postedBy: 'Admin',
-    },
-    {
-      id: 2,
-      title: 'Notice Title 2',
-      datePosted: '2025-02-01',
-      description: 'Second notice with more details. I am filling this with random content to test this, so.... lalalelelelelelelele elelelelelel elelelelelelelel elelelelelele elelelelelelele leleleelelelele leleleleleelelele leleleleleI am filling this with random content to test this, so.... lalalelelelelelelele elelelelelel elelelelelelelel elelelelelele elelelelelelele leleleelelelele leleleleleelelele leleleleleI am filling this with random content to test this, so.... lalalelelelelelelele elelelelelel elelelelelelelel elelelelelele elelelelelelele leleleelelelele leleleleleelelele leleleleleI am filling this with random content to test this, so.... lalalelelelelelelele elelelelelel elelelelelelelel elelelelelele elelelelelelele leleleelelelele leleleleleelelele leleleleleI am filling this with random content to test this, so.... lalalelelelelelelele elelelelelel elelelelelelelel elelelelelele elelelelelelele leleleelelelele leleleleleelelele leleleleleI am filling this with random content to test this, so.... lalalelelelelelelele elelelelelel elelelelelelelel elelelelelele elelelelelelele leleleelelelele leleleleleelelele lelelelele',
-      postedBy: 'Staff Member',
-    },
-    {
-      id: 3,
-      title: 'Notice Title 1',
-      datePosted: '2025-02-02',
-      description: 'This is the first notice. I am filling this with random content to test this, so.... lalalelelelelelelele elelelelelel elelelelelelelel elelelelelele elelelelelelele leleleelelelele leleleleleelelele lelelelele',
-      postedBy: 'Admin',
-    },
-    {
-      id: 4,
-      title: 'Notice Title 1',
-      datePosted: '2025-02-02',
-      description: 'This is the first notice. I am filling this with random content to test this, so.... lalalelelelelelelele elelelelelel elelelelelelelel elelelelelele elelelelelelele leleleelelelele leleleleleelelele lelelelele',
-      postedBy: 'Admin',
-    },
-    {
-      id: 5,
-      title: 'Notice Title 1',
-      datePosted: '2025-02-02',
-      description: 'This is the first notice. I am filling this with random content to test this, so.... lalalelelelelelelele elelelelelel elelelelelelelel elelelelelele elelelelelelele leleleelelelele leleleleleelelele lelelelele',
-      postedBy: 'Admin',
-    },
-    {
-      id: 6,
-      title: 'Notice Title 1',
-      datePosted: '2025-02-02',
-      description: 'This is the first notice. I am filling this with random content to test this, so.... lalalelelelelelelele elelelelelel elelelelelelelel elelelelelele elelelelelelele leleleelelelele leleleleleelelele lelelelele',
-      postedBy: 'Admin',
-    },
-  ]);
+  const [notices, setNotices] = useState([]);
 
   const [selectedNotice, setSelectedNotice] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
+  // Fetch notices from Firebase Realtime Database
+  const fetchNotices = () => {
+    const noticesRef = ref(database, 'notices'); // Reference to the 'notices' node in Firebase
+    onValue(noticesRef, (snapshot) => {
+      const noticesData = snapshot.val(); // Get the data from the snapshot
+      if (noticesData) {
+        // Convert the object of notices into an array
+        const noticesArray = Object.keys(noticesData).map((key) => ({
+          id: key, // Use the Firebase key as the ID
+          ...noticesData[key], // Spread the notice data
+        }));
+        setNotices(noticesArray); // Update the state with the fetched notices
+      } else {
+        setNotices([]); // If no data, set notices to an empty array
+      }
+    });
+  };
+
+  // Fetch notices when the component mounts
+  useEffect(() => {
+    fetchNotices();
+  }, []);
+
+  // Refresh notices
   const onRefresh = () => {
     setRefreshing(true);
-    setTimeout(() => setRefreshing(false), 2000);
+    fetchNotices(); // Re-fetch notices
+    setTimeout(() => setRefreshing(false), 1000); // Simulate a delay
   };
 
   const handlePressNotice = (notice) => setSelectedNotice(notice);
@@ -112,87 +103,7 @@ function NoticeScreen() {
   );
 }
 
-// Other Screens
-function MapScreen() {
-  return (
-    <View style={styles.screenContainer}>
-      <Text>Map Screen</Text>
-    </View>
-  );
-}
-
-function AdminScreen() {
-  const navigation = useNavigation();
-  return (
-    <View style={styles.screenContainer}>
-      <Text>Admin Screen</Text>
-      <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-        <Text style={styles.linkText}>Go to Admin Login</Text>
-      </TouchableOpacity>
-    </View>
-  );
-}
-
-function AboutUsScreen() {
-  return (
-    <View style={styles.screenContainer}>
-      <Text>About Us Screen</Text>
-    </View>
-  );
-}
-
-function LogoutScreen() {
-  const navigation = useNavigation();
-  const handleLogout = () => {
-    Alert.alert('Confirmation', 'Are you sure you want to logout?', [
-      { text: 'No', style: 'cancel' },
-      { text: 'Yes', onPress: () => navigation.navigate('Login') },
-    ]);
-  };
-  return (
-    <View style={styles.screenContainer}>
-      <TouchableOpacity onPress={handleLogout}>
-        <Text style={styles.linkText}>Logout</Text>
-      </TouchableOpacity>
-    </View>
-  );
-}
-
-function ExitScreen() {
-  const handleExit = () => {
-    Alert.alert('Confirmation', 'Are you sure you want to exit?', [
-      { text: 'No', style: 'cancel' },
-      { text: 'Yes', onPress: () => BackHandler.exitApp() },
-    ]);
-  };
-  return (
-    <View style={styles.screenContainer}>
-      <TouchableOpacity onPress={handleExit}>
-        <Text style={styles.linkText}>Exit App</Text>
-      </TouchableOpacity>
-    </View>
-  );
-}
-
-// Drawer Navigator
-const Drawer = createDrawerNavigator();
-
-function MyDrawer() {
-  return (
-    <NavigationContainer independent={true}>
-      <Drawer.Navigator initialRouteName="Notice Board">
-        <Drawer.Screen name="Notice Board" component={NoticeScreen} />
-        <Drawer.Screen name="Map" component={MapScreen} />
-        <Drawer.Screen name="Admin" component={AdminScreen} />
-        <Drawer.Screen name="About Us" component={AboutUsScreen} />
-        <Drawer.Screen name="Log out" component={LogoutScreen} />
-        <Drawer.Screen name="Exit" component={ExitScreen} />
-      </Drawer.Navigator>
-    </NavigationContainer>
-  );
-}
-
-export default MyDrawer; // Export only the drawer which includes everything
+export default NoticeScreen; // Export only the drawer which includes everything
 
 // Styles
 const styles = StyleSheet.create({

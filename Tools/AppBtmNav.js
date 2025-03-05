@@ -4,12 +4,15 @@ import Toast from 'react-native-toast-message';
 import { useNavigation } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons'; // Assuming you're using Expo, otherwise use appropriate icon library
+import {NavigationContainer} from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 
-import MyDrawer from '../Screens/NoticeScreen';
+import NoticeScreen from '../Screens/NoticeScreen';
 import MapScreen from '../Screens/MapScreen';
 import ChatScreen from '../Screens/ChatScreen';
 
 const Tab = createBottomTabNavigator();
+const Stack = createStackNavigator();
 
 function AppBtmNav(props) {
     const navigation = useNavigation();
@@ -92,7 +95,7 @@ function AppBtmNav(props) {
                     headerShown: false, // Hides the header
                 })}
             >
-                <Tab.Screen name="Notice" component={MyDrawer} />
+                <Tab.Screen name="Notice" component={NoticeScreen} />
                 <Tab.Screen name="Map" component={MapScreen} />
                 <Tab.Screen name="Chat" component={ChatScreen} />
             </Tab.Navigator>

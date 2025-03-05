@@ -25,14 +25,14 @@ const ChatScreen = () => {
       const result = await model.generateContent(inputText); // Use the user's input as the prompt
 
       // Extract the bot's response from the API result
-      const botMessageText = String(result.response.text || "Default response");
+      const botMessageText = String(result.response.text().trim() || "Default response");
 
       // Add the bot's response to the chat
-      const botMessage = { id: messages.length, text: botMessageText, sender: 'bot' };
+      const botMessage = { id: messages.length + 1, text: botMessageText, sender: 'bot' };
       setMessages((prevMessages) => [...prevMessages, botMessage]);
     } catch (error) {
       console.error('Error generating AI response:', error);
-      const errorMessage = { id: messages.length, text: "Failed to get response", sender: 'bot' };
+      const errorMessage = { id: messages.length + 1, text: "Failed to get response, please check your internet connection and try again", sender: 'bot' };
       setMessages((prevMessages) => [...prevMessages, errorMessage]);
     } finally {
       setLoading(false);

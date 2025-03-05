@@ -14,6 +14,7 @@ import AppBtmNav from './Tools/AppBtmNav';
 import AdminBtmNav from './Tools/AdminBtmNav';
 import AboutScreen from './Screens/AboutScreen'
 import { NoticeBoardProvider } from './E-NoticeBoard';
+import AppNavigator from './Navigation/AppNavigator';
 
 export default function App() {
 
@@ -22,14 +23,7 @@ export default function App() {
   return (
 	<NoticeBoardProvider>
 		<NavigationContainer>
-		  <Stack.Navigator initialRouteName="Welcome">
-			<Stack.Screen name="Welcome" component={WelcomeScreen}/>
-			<Stack.Screen name="Signup" component={SignupScreen}/>
-			<Stack.Screen name="BtmNav" component={AppBtmNav}/>
-			<Stack.Screen name="Login" component={LoginScreen}/>
-			<Stack.Screen name="Admin" component={AdminBtmNav}/>
-			<Stack.Screen name="About" component={AboutScreen}/>
-		  </Stack.Navigator>
+		    <AppNavigator />
 		</NavigationContainer>
 	</NoticeBoardProvider>
   );
