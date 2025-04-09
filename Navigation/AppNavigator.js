@@ -4,6 +4,8 @@ import HomeScreen from '../Screens/NoticeScreen';
 import MapScreen from '../Screens/MapScreen';
 import ChatScreen from '../Screens/ChatScreen';
 import LoginScreen from '../Screens/LoginScreen';
+//import SignupScreen from '../Screens/SignupScreen';
+import ApplicationScreen from '../Screens/ApplicationScreen';
 import ProfileScreen from '../Screens/ProfileScreen';
 import SettingsScreen from '../Screens/SettingsScreen';
 import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
@@ -33,6 +35,10 @@ function CustomDrawerContent(props) {
       <DrawerItem
         label="Login"
         onPress={() => props.navigation.navigate('Login')}
+      />
+	  <DrawerItem
+        label="Application"
+        onPress={() => props.navigation.navigate('ApplicationScreen')}
       />
     </DrawerContentScrollView>
   );
@@ -79,6 +85,7 @@ function AppNavigator() {
       <Drawer.Screen name="Profile" component={ProfileScreen} />
       <Drawer.Screen name="Settings" component={SettingsScreen} />
       <Drawer.Screen name="Login" component={LoginScreen} />
+	  <Drawer.Screen name="ApplicationScreen" component={ApplicationScreen} />
     </Drawer.Navigator>
   );
 }

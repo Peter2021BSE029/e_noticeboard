@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { SafeAreaView, StyleSheet, View, TextInput, Button, FlatList, Text, KeyboardAvoidingView, Platform } from 'react-native';
 import { GoogleGenerativeAI } from "@google/generative-ai"; // Import the AI API
+import { database, ref, onValue } from '../Firebase/firebase'; // Import Firebase functions
 
 const genAI = new GoogleGenerativeAI("AIzaSyAd5oMMQ0Wc08u3SOB_3OR4jLjyuO47TTQ"); // Replace with your API key
 
@@ -9,6 +10,23 @@ const ChatScreen = () => {
   const [messages, setMessages] = useState([]); // Store messages
   const [inputText, setInputText] = useState(''); // Store current input
   const [loading, setLoading] = useState(false); // Loading state for API calls
+  const [firebaseData, setFirebaseData] = useState(null); // Store data from Firebase
+
+  // Reference to the Firebase Realtime Database node you want to query
+  const dataRef = ref(database, 'notices'); // Replace 'your-data-node' with the actual path
+
+  // Load data from Firebase when the component mounts
+  useEffect(() => {
+    const unsubscribe = onValue(dataRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        setFirebaseData(data); // Store the fetched data in state
+      }
+    });
+
+    // Clean up the listener when the component unmounts
+    return () => unsubscribe();
+  }, []);
 
   // Handle sending the user message and adding the AI-generated bot reply
   const handleSendMessage = async () => {
@@ -22,7 +40,15 @@ const ChatScreen = () => {
     setLoading(true);
     try {
       const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-      const result = await model.generateContent(inputText); // Use the user's input as the prompt
+
+      // Include Firebase data in the prompt
+      const prompt = `
+        System: You are a helpful assistant for a Geofence E-Notice system called Campus Guide, that answers user questions based on the provided Firebase data (about notices). This here is the system prompt to guide you so your response should be towards the User Question, not this. If the question isn't connected to the notices, then it must be related to locating places around Mbarara University of Science and Technology, Uganda or something about the university. Do not talk about or answer questions regarding anything else.
+        Firebase Data: ${JSON.stringify(firebaseData, null, 2)}
+        User Question: ${inputText}
+      `;
+
+      const result = await model.generateContent(prompt); // Use the combined prompt
 
       // Extract the bot's response from the API result
       const botMessageText = String(result.response.text().trim() || "Default response");

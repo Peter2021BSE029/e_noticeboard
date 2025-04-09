@@ -8,7 +8,8 @@ import { createStackNavigator } from '@react-navigation/stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import LoginScreen from './Screens/LoginScreen';
-import SignupScreen from './Screens/SignupScreen';
+//import SignupScreen from './Screens/SignupScreen';
+import ApplicationScreen from './Screens/ApplicationScreen';
 import WelcomeScreen from './Screens/WelcomeScreen';
 import AppBtmNav from './Tools/AppBtmNav';
 import AdminBtmNav from './Tools/AdminBtmNav';
