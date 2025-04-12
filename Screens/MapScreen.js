@@ -1,7 +1,7 @@
 // Import useState and useEffect from React
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, SafeAreaView, View, Alert, Text } from 'react-native';
-import MapView, { Geojson, Circle, Marker } from 'react-native-maps';
+import MapView, { Geojson, Circle, Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import * as Location from 'expo-location';
 import new_coordinates from "../MapAssets/new_coordinates.json";
 import must_grounds from "../MapAssets/must_grounds.json";
@@ -150,6 +150,7 @@ function MapScreen(props) {
                 <SearchBarWithDropdown onSearch={handleSearch} />
             </View>
             <MapView
+			    provider={PROVIDER_GOOGLE}
                 style={styles.map}
                 ref={mapViewRef}
                 initialRegion={{
