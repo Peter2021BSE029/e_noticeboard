@@ -5,7 +5,7 @@ import {getAuth, createUserWithEmailAndPassword, initializeAuth, getReactNativeP
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
+  apiKey: "AIzaSyC2NXbM5YI-eT2OSm1MALh4EaJCJokeQfI",
   authDomain: "campus-map-3ecef.firebaseapp.com",
   databaseURL: "https://campus-map-3ecef-default-rtdb.firebaseio.com",
   projectId: "campus-map-3ecef",

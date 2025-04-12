@@ -15,13 +15,24 @@
       "supportsTablet": true
     },
     "android": {
+	  "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyDmULvqsQxJV5FjHfGnxjkdDeblL6eyGM8",
+        },
+      },
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.hero1legendary.CampusGuide"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "f8a6c15c-41fe-4d03-890e-75bd607658a5"
+      }
     }
   }
 }

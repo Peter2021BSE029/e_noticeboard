@@ -4,7 +4,7 @@ import HomeScreen from '../Screens/NoticeScreen';
 import MapScreen from '../Screens/MapScreen';
 import ChatScreen from '../Screens/ChatScreen';
 import LoginScreen from '../Screens/LoginScreen';
-//import SignupScreen from '../Screens/SignupScreen';
+import SignupScreen from '../Screens/SignupScreen';
 import ApplicationScreen from '../Screens/ApplicationScreen';
 import ProfileScreen from '../Screens/ProfileScreen';
 import SettingsScreen from '../Screens/SettingsScreen';
@@ -13,9 +13,19 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 
 
-const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 const Tab = createBottomTabNavigator();
+
+const AuthStack = createStackNavigator();
+
+function AuthNavigator() {
+  return (
+    <AuthStack.Navigator screenOptions={{ headerShown: true }}>
+      <AuthStack.Screen name="Login" component={LoginScreen} />
+      <AuthStack.Screen name="Signup" component={SignupScreen} />
+    </AuthStack.Navigator>
+  );
+}
 
 function CustomDrawerContent(props) {
   return (
@@ -34,7 +44,7 @@ function CustomDrawerContent(props) {
       />
       <DrawerItem
         label="Login"
-        onPress={() => props.navigation.navigate('Login')}
+        onPress={() => props.navigation.navigate('Authentication')}
       />
 	  <DrawerItem
         label="Application"
@@ -84,7 +94,7 @@ function AppNavigator() {
       <Drawer.Screen name="Campus Connect" component={MainStack} />
       <Drawer.Screen name="Profile" component={ProfileScreen} />
       <Drawer.Screen name="Settings" component={SettingsScreen} />
-      <Drawer.Screen name="Login" component={LoginScreen} />
+      <Drawer.Screen name="Authentication" component={AuthNavigator} />
 	  <Drawer.Screen name="ApplicationScreen" component={ApplicationScreen} />
     </Drawer.Navigator>
   );

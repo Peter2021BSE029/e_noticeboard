@@ -8,6 +8,11 @@ import { auth, createUserWithEmailAndPassword, database, ref, set } from '../Fir
 
 function SignupScreen(props) {
   const navigation = useNavigation();
+
+  const [name, setName] = useState('');
+  const onChangeName = (newText) => {
+      setName(newText);
+  };
   
   const [email, setEmail] = useState('');
   const onChangeEmail = (newText) => {
@@ -42,9 +47,10 @@ function SignupScreen(props) {
 
           // Add user to realtime firebase database
           const userData = {
-              email,
-              role: "creator"
-              //userId: uid,
+            name,
+            email,
+            role: "user"
+            //userId: uid,
           };
 
           // Set user data to a new node under "users" with a uid as the key
@@ -79,11 +85,19 @@ function SignupScreen(props) {
         </View>
         <View style={styles.formContainer}>
           <TextInput
+            placeholder='Enter full name:'
+            style={styles.input}
+            onChangeText={onChangeName}
+            value={name}
+          />
+          <TextInput
             placeholder='Enter email:'
             style={styles.input}
             onChangeText={onChangeEmail}
             value={email}
             autoCapitalize='none'
+            keyboardType="email-address"
+            autoCorrect={false}
           />
           <TextInput
             placeholder='Enter password:'

@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { StyleSheet, SafeAreaView, TextInput, Button, Alert, Text, View, Keyboard } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, createStaticNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import Toast from 'react-native-toast-message';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {auth, signInWithEmailAndPassword} from '../Firebase/firebase';
+import {auth, signInWithEmailAndPassword, get, ref} from '../Firebase/firebase';
+import SignupScreen from '../Screens/SignupScreen';
 
 function LoginScreen(props) {
   const navigation = useNavigation();
@@ -33,7 +34,11 @@ function LoginScreen(props) {
       try {
           const userCredential = await signInWithEmailAndPassword(auth, email, password);
           const uid = userCredential.user.uid;
+          const usersRef = ref(database, `users/${uid}`);
+          const snapshot = await get(usersRef);
+          const name = snapshot.val().name;
           await AsyncStorage.setItem('uid', uid);
+          await AsyncStorage.setItem('name', name);
 
           Keyboard.dismiss();
           showToast();
@@ -83,7 +88,7 @@ function LoginScreen(props) {
             <Text style={styles.orText}>or</Text>
             <View style={styles.line} />
           </View>
-          <Button title="Signup" onPress={() => navigation.navigate("ApplicationScreen")} color="#5856D6" />
+          <Button title="Signup" onPress={() => navigation.navigate("Signup")} color="#5856D6" />
         </View>
         <Toast position='bottom' />
       </SafeAreaView>

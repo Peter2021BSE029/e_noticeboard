@@ -1,6 +1,6 @@
 import '../gesture-handler';
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, RefreshControl, SafeAreaView, TextInput, Alert, BackHandler } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, RefreshControl, SafeAreaView, TextInput, Alert, BackHandler, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
@@ -70,7 +70,13 @@ function NoticeScreen() {
             <Text style={styles.title}>{selectedNotice.title}</Text>
             <Text style={styles.date}>{selectedNotice.datePosted}</Text>
             <Text style={styles.description}>{selectedNotice.description}</Text>
+            <Text style={styles.description}>Date: {selectedNotice.date}</Text>
+            <Text style={styles.description}>Time: {selectedNotice.time}</Text>
+            <Text style={styles.description}>Venue: {selectedNotice.venue}</Text>
             <Text style={styles.postedBy}>Posted by: {selectedNotice.postedBy}</Text>
+            {selectedNotice.image && (
+              <Image source={{ uri: selectedNotice.image }} style={styles.detailImage} />
+            )}
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -129,4 +135,5 @@ const styles = StyleSheet.create({
   searchInput: { height: 40, borderColor: '#ddd', borderWidth: 1, borderRadius: 8, marginVertical: 10, paddingLeft: 10 },
   screenContainer: { flex: 1, alignItems: 'center', justifyContent: 'center' },
   linkText: { color: '#1e90ff', marginTop: 20, fontSize: 16 },
+  detailImage: { width: '100%', height: 200, borderRadius: 5, marginTop: 10 },
 });
