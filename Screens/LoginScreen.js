@@ -1,14 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { StyleSheet, SafeAreaView, TextInput, Button, Alert, Text, View, Keyboard } from 'react-native';
 import { useNavigation, createStaticNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import Toast from 'react-native-toast-message';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {auth, signInWithEmailAndPassword, get, ref} from '../Firebase/firebase';
-import SignupScreen from '../Screens/SignupScreen';
+import {auth, signInWithEmailAndPassword, get, ref, database } from '../Firebase/firebase';
+import SignupScreen from './SignupScreen';
+import { AuthContext } from '../Tools/AuthContext';
+import HomeScreen from './NoticeScreen';
 
 function LoginScreen(props) {
   const navigation = useNavigation();
+  
+  const { login } = useContext(AuthContext);
 
   const [email, setEmail] = useState('');
     const onChangeEmail = (emailText) => {
@@ -39,11 +43,14 @@ function LoginScreen(props) {
           const name = snapshot.val().name;
           await AsyncStorage.setItem('uid', uid);
           await AsyncStorage.setItem('name', name);
+		  
+		await AsyncStorage.setItem('uid', uid);
+		await AsyncStorage.setItem('name', name);
+		login(uid, name);
 
           Keyboard.dismiss();
           showToast();
-          setTimeout(() => navigation.navigate('Admin'), 2500);
-          //navigation.navigate('Admin');
+          //setTimeout(() => navigation.navigate('Home'), 2000);
         }
       catch (error) {
         if (error.message === 'Firebase: Error (auth/invalid-credential).') {

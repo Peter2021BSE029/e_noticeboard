@@ -1,5 +1,5 @@
 // Import useState and useEffect from React
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, SafeAreaView, View, Alert, Text } from 'react-native';
 import MapView, { Geojson, Circle, Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import * as Location from 'expo-location';
@@ -7,7 +7,6 @@ import new_coordinates from "../MapAssets/new_coordinates.json";
 import must_grounds from "../MapAssets/must_grounds.json";
 import SearchBarWithDropdown from '../Tools/SearchBar';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useFocusEffect } from '@react-navigation/native';
 
 function MapScreen(props) {
   
@@ -93,24 +92,6 @@ function MapScreen(props) {
         Alert.alert('Not Found', `Location with name "${text}" not found`);
       }
     };
-
-    useFocusEffect(
-      useCallback(() => {
-        const fetchLocationName = async () => {
-          const locationName = await AsyncStorage.getItem("locationName");
-          if (locationName) {
-            handleSearch(locationName);
-            await AsyncStorage.removeItem("locationName");
-          }
-        };
-        fetchLocationName();
-    
-        // Optionally, return a cleanup function here if needed
-        // return () => {
-        //   // Cleanup logic when the screen loses focus
-        // };
-      }, [handleSearch])
-    );
 
     useEffect(() => {
       if (searchLocation) {

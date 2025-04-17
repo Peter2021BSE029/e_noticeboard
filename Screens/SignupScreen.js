@@ -59,7 +59,6 @@ function SignupScreen(props) {
           Keyboard.dismiss();
           showToast();
           setTimeout(() => navigation.navigate('Notice'), 2500);
-          //navigation.navigate('Login')
       }
       catch (error) {
         if (error.message === 'Firebase: Error (auth/network-request-failed).') {

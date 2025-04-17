@@ -1,16 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { SafeAreaView, StyleSheet, View, TextInput, Button, FlatList, Text, KeyboardAvoidingView, Platform, TouchableOpacity } from 'react-native';
+import { SafeAreaView, StyleSheet, View, TextInput, Button, FlatList, Text, KeyboardAvoidingView, Platform } from 'react-native';
 import { GoogleGenerativeAI } from "@google/generative-ai"; // Import the AI API
 import { database, ref, onValue } from '../Firebase/firebase'; // Import Firebase functions
-import { useNavigation } from '@react-navigation/native';
-import new_coordinates from "../MapAssets/new_coordinates.json";
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const genAI = new GoogleGenerativeAI("AIzaSyAd5oMMQ0Wc08u3SOB_3OR4jLjyuO47TTQ"); // Replace with your API key
 
+// Each chat bubble will either be a user message or a bot reply
 const ChatScreen = () => {
-  const navigation = useNavigation();
-
   const [messages, setMessages] = useState([]); // Store messages
   const [inputText, setInputText] = useState(''); // Store current input
   const [loading, setLoading] = useState(false); // Loading state for API calls
@@ -32,15 +28,6 @@ const ChatScreen = () => {
     return () => unsubscribe();
   }, []);
 
-  const findLocation = (query) => {
-    const lowercaseQuery = query.toLowerCase();
-    const foundLocation = new_coordinates.find(item =>
-      lowercaseQuery.includes(item.name.toLowerCase())
-    );
-  
-    return foundLocation ? foundLocation.name : null; // Return name if found, null otherwise
-  };
-
   // Handle sending the user message and adding the AI-generated bot reply
   const handleSendMessage = async () => {
     if (inputText.trim() === '') return; // Don't send empty messages
@@ -54,14 +41,10 @@ const ChatScreen = () => {
     try {
       const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-      const foundLocation = findLocation(inputText);
-      console.log(foundLocation);
-
       // Include Firebase data in the prompt
       const prompt = `
-        System: You are a friendly helpful assistant for a Geofence E-Notice system called Campus Guide, that answers user questions based on the provided Firebase data (about notices). This here is the system prompt to guide you so your response should be towards the User Question, not this. If the user question isn't connected to the notices, then it must be related to locating places around Mbarara University of Science and Technology, Uganda or something about the university. If the Location field does not say null, and the context of the User Question is about finding a place, then simply tell the user to 'click the link provided below to view the location on the map'. Do not talk about or answer questions regarding anything else.
+        System: You are a helpful assistant for a Geofence E-Notice system called Campus Guide, that answers user questions based on the provided Firebase data (about notices). This here is the system prompt to guide you so your response should be towards the User Question, not this. If the question isn't connected to the notices, then it must be related to locating places around Mbarara University of Science and Technology, Uganda or something about the university. Do not talk about or answer questions regarding anything else.
         Firebase Data: ${JSON.stringify(firebaseData, null, 2)}
-        Location: ${foundLocation}
         User Question: ${inputText}
       `;
 
@@ -70,28 +53,9 @@ const ChatScreen = () => {
       // Extract the bot's response from the API result
       const botMessageText = String(result.response.text().trim() || "Default response");
 
-      if (foundLocation) {
-        const botMessage = {
-            id: messages.length + 1,
-            text: (
-                <>
-                    <Text>{botMessageText}</Text>
-                    <TouchableOpacity onPress={() => { AsyncStorage.setItem("locationName", foundLocation); navigation.navigate('Map') }}>
-                        <Text style={styles.linkText}>Directions to {foundLocation}</Text>
-                    </TouchableOpacity>
-                </>
-            ),
-            sender: 'bot',
-        };
-        setMessages((prevMessages) => [...prevMessages, botMessage]);
-    }
-
-    // Add the bot's response to the chat
-    else {
+      // Add the bot's response to the chat
       const botMessage = { id: messages.length + 1, text: botMessageText, sender: 'bot' };
       setMessages((prevMessages) => [...prevMessages, botMessage]);
-    }
-
     } catch (error) {
       console.error('Error generating AI response:', error);
       const errorMessage = { id: messages.length + 1, text: "Failed to get response, please check your internet connection and try again", sender: 'bot' };
@@ -185,7 +149,6 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     marginRight: 10,
   },
-  linkText: { color: 'blue', textDecorationLine: 'underline' },
 });
 
 export default ChatScreen;

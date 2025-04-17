@@ -10,7 +10,6 @@ import { database, onValue, ref } from '../Firebase/firebase'; // Import Firebas
 import MapScreen from './MapScreen';
 import AdminBtmNav from '../Tools/AdminBtmNav';
 import AboutUsScreen from './AboutScreen';
-import LoginScreen from './LoginScreen';
 
 const Drawer = createDrawerNavigator();
 
