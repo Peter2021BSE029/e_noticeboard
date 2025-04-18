@@ -19,6 +19,7 @@ function AdminFormFill(props) {
           autoHide: true,
         });
         setEvent('');
+        setDescription('');
         setDate('');
         setTime('');
         setVenue('');
@@ -88,6 +89,12 @@ function AdminFormFill(props) {
         Keyboard.dismiss();
         try{    
             const name = await AsyncStorage.getItem('name');
+            if (!name) {
+              alert("You need to login in order to post");
+              navigation.navigate('Login');
+              return;
+            }
+
             const datePosted = new Date();
 
             if (image) {
