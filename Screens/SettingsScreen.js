@@ -1,13 +1,13 @@
 import React from 'react';
 import { View, Text, Switch, StyleSheet, TouchableOpacity, Alert, Linking } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import Constants from 'expo-constants';
-import * as Application from 'expo-application';
-import { useTheme } from '../Tools/ThemeContext';
+//import Constants from 'expo-constants';
+//import * as Application from 'expo-application';
+//import { useTheme } from '../Tools/ThemeContext';
 
 const SettingsScreen = () => {
   const [notificationsEnabled, setNotificationsEnabled] = React.useState(true);
-  const { theme, toggleTheme } = useTheme();
+  //const { theme, toggleTheme } = useTheme();
   const darkModeEnabled = theme === 'dark';
   const navigation = useNavigation();
 
@@ -46,7 +46,7 @@ const SettingsScreen = () => {
       <View style={styles.versionInfo}>
 <Text style={{ color: '#777' }}>
   App Version:{' '}
-  {Constants?.manifest?.version || Application.nativeApplicationVersion || 'N/A'}
+  {/* {Constants?.manifest?.version || Application.nativeApplicationVersion || 'N/A'} */}
 </Text>
       </View>
     </View>

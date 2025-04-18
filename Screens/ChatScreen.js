@@ -55,7 +55,6 @@ const ChatScreen = () => {
       const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
       const foundLocation = findLocation(inputText);
-      console.log(foundLocation);
 
       // Include Firebase data in the prompt
       const prompt = `
@@ -77,7 +76,7 @@ const ChatScreen = () => {
                 <>
                     <Text>{botMessageText}</Text>
                     <TouchableOpacity onPress={() => { AsyncStorage.setItem("locationName", foundLocation); navigation.navigate('Map') }}>
-                        <Text style={styles.linkText}>Directions to {foundLocation}</Text>
+                        <Text style={styles.linkText}>View {foundLocation}</Text>
                     </TouchableOpacity>
                 </>
             ),

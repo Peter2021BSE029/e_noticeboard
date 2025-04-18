@@ -95,7 +95,7 @@ function AppNavigator() {
       <Drawer.Screen name="Profile" component={ProfileScreen} />
       <Drawer.Screen name="Settings" component={SettingsScreen} />
       <Drawer.Screen name="Authentication" component={AuthNavigator} />
-	  <Drawer.Screen name="ApplicationScreen" component={ApplicationScreen} />
+	    <Drawer.Screen name="ApplicationScreen" component={ApplicationScreen} />
     </Drawer.Navigator>
   );
 }
