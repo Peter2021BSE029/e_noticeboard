@@ -33,37 +33,41 @@ function LoginScreen(props) {
       });
   };
 
-    const handleLogin = async () => {
-      Keyboard.dismiss();
-      try {
-          const userCredential = await signInWithEmailAndPassword(auth, email, password);
-          const uid = userCredential.user.uid;
-          const usersRef = ref(database, `users/${uid}`);
-          const snapshot = await get(usersRef);
-          const name = snapshot.val().name;
-          await AsyncStorage.setItem('uid', uid);
-          await AsyncStorage.setItem('name', name);
-		  
-		await AsyncStorage.setItem('uid', uid);
-		await AsyncStorage.setItem('name', name);
-		login(uid, name);
+const handleLogin = async () => {
+  Keyboard.dismiss();
+  try {
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    const uid = userCredential.user.uid;
 
-          Keyboard.dismiss();
-          showToast();
-          //setTimeout(() => navigation.navigate('Home'), 2000);
-        }
-      catch (error) {
-        if (error.message === 'Firebase: Error (auth/invalid-credential).') {
-          Alert.alert('Login Error', "Invalid Login credentials, try again");
-        }
-        else if (error.message === 'Firebase: Error (auth/network-request-failed).') {
-          Alert.alert('Login Error', "Please ensure you are connected to the internet");
-        }
-        else{
-          Alert.alert('Error', error.message);
-        }
-      }
-    };
+    const usersRef = ref(database, `users/${uid}`);
+    const snapshot = await get(usersRef);
+
+    if (snapshot.exists()) {
+      const userData = snapshot.val();
+      const firstName = userData.firstName || '';
+      const lastName = userData.lastName || '';
+      const fullName = `${firstName} ${lastName}`.trim();
+
+      await AsyncStorage.setItem('uid', uid);
+      await AsyncStorage.setItem('firstName', firstName);
+      await AsyncStorage.setItem('lastName', lastName);
+
+      login(uid, fullName);
+      showToast();
+    } else {
+      Alert.alert("Login Error", "User record not found.");
+    }
+  } catch (error) {
+    if (error.message === 'Firebase: Error (auth/invalid-credential).') {
+      Alert.alert('Login Error', "Invalid Login credentials, try again");
+    } else if (error.message === 'Firebase: Error (auth/network-request-failed).') {
+      Alert.alert('Login Error', "Please ensure you are connected to the internet");
+    } else {
+      Alert.alert('Error', error.message);
+    }
+  }
+};
+
 
     return (
       <SafeAreaView style={styles.container}>
