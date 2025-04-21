@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { StyleSheet, SafeAreaView, TextInput, Button, Alert, Text, View, Keyboard } from 'react-native';
+import { StyleSheet, SafeAreaView, TextInput, Button, Alert, Text, View, Keyboard, ActivityIndicator } from 'react-native';
 import { useNavigation, createStaticNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import Toast from 'react-native-toast-message';
@@ -11,6 +11,8 @@ import HomeScreen from './NoticeScreen';
 
 function LoginScreen(props) {
   const navigation = useNavigation();
+  
+  const [loading, setLoading] = useState(false);
   
   const { login } = useContext(AuthContext);
 
@@ -35,6 +37,7 @@ function LoginScreen(props) {
 
 const handleLogin = async () => {
   Keyboard.dismiss();
+  setLoading(true);
   try {
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
     const uid = userCredential.user.uid;
@@ -65,6 +68,8 @@ const handleLogin = async () => {
     } else {
       Alert.alert('Error', error.message);
     }
+  } finally {
+    setLoading(false);
   }
 };
 
@@ -101,12 +106,28 @@ const handleLogin = async () => {
           </View>
           <Button title="Signup" onPress={() => navigation.navigate("Signup")} color="#5856D6" />
         </View>
+{loading && (
+  <View style={styles.loadingOverlay}>
+    <ActivityIndicator size="large" color="#5856D6" />
+  </View>
+)}
         <Toast position='bottom' />
       </SafeAreaView>
     );
   }
   
   const styles = StyleSheet.create({
+loadingOverlay: {
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  justifyContent: 'center',
+  alignItems: 'center',
+  backgroundColor: 'rgba(0,0,0,0.2)',
+  zIndex: 999,
+},
     container: {
       flex: 1,
       backgroundColor: '#fff',

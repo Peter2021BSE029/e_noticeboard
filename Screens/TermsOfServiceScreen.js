@@ -1,15 +1,16 @@
 import React from 'react';
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import { useTheme } from '../Tools/ThemeContext';
+import colors from '../Tools/theme'; // 🌈 Import your theme color definitions
 
 const TermsOfServiceScreen = () => {
-  const { theme } = useTheme();
-  const isDark = theme === 'dark';
+  const { theme } = useTheme(); // 'dark' or 'light'
+  const styles = getStyles(colors[theme]); // Use theme-aware styles
 
   return (
-    <ScrollView contentContainerStyle={[styles.container, { backgroundColor: isDark ? '#000' : '#fff' }]}>
-      <Text style={[styles.heading, { color: isDark ? '#fff' : '#000' }]}>Terms of Service</Text>
-      <Text style={[styles.text, { color: isDark ? '#ccc' : '#333' }]}>
+    <ScrollView contentContainerStyle={styles.container}>
+      <Text style={styles.heading}>Terms of Service</Text>
+      <Text style={styles.text}>
         Welcome to MUST E-Noticeboard. By using this app, you agree to the following terms...
         {'\n\n'}
         1. You shall not post offensive or unauthorized content.
@@ -24,20 +25,24 @@ const TermsOfServiceScreen = () => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    padding: 20,
-    flexGrow: 1,
-  },
-  heading: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 15,
-  },
-  text: {
-    fontSize: 16,
-    lineHeight: 24,
-  },
-});
+const getStyles = (theme) =>
+  StyleSheet.create({
+    container: {
+      padding: 20,
+      flexGrow: 1,
+      backgroundColor: theme.background,
+    },
+    heading: {
+      fontSize: 24,
+      fontWeight: 'bold',
+      color: theme.text,
+      marginBottom: 15,
+    },
+    text: {
+      fontSize: 16,
+      lineHeight: 24,
+      color: theme.textSecondary || theme.text,
+    },
+  });
 
 export default TermsOfServiceScreen;

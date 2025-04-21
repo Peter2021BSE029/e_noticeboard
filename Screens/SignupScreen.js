@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import {
   StyleSheet, SafeAreaView, TextInput, View, Text,
   TouchableOpacity, Modal, FlatList, Alert, Keyboard,
-  KeyboardAvoidingView, TouchableWithoutFeedback, Platform, Button
+  KeyboardAvoidingView, TouchableWithoutFeedback, Platform, Button, ActivityIndicator
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import Toast from 'react-native-toast-message';
@@ -19,6 +19,8 @@ import colors from '../Tools/theme';
 function SignupScreen({ theme = 'light' }) {
   const navigation = useNavigation();
   const c = colors[theme];
+  
+  const [loading, setLoading] = useState(false);
   
   const { login } = useContext(AuthContext);
 
@@ -62,6 +64,8 @@ function SignupScreen({ theme = 'light' }) {
     if (!selectedFaculty) return Alert.alert("Missing Info", "Please select a faculty.");
     if (password !== passwordConfirm) return Alert.alert("Password Mismatch", "Passwords don't match.");
     if (password.length < 6) return Alert.alert("Weak Password", "Use at least 6 characters and mix letters and numbers.");
+	
+	setLoading(true);
 
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
@@ -87,6 +91,8 @@ function SignupScreen({ theme = 'light' }) {
       console.error(error);
       Alert.alert("Signup Error", error.message.includes('auth/network-request-failed') ?
         "Check your internet connection." : error.message);
+    } finally {
+      setLoading(false);
     }
   };
 

@@ -1,5 +1,15 @@
-import { createDrawerNavigator } from '@react-navigation/drawer';
+import React, { useContext } from 'react';
+import { Text, StatusBar } from 'react-native';
+import { createDrawerNavigator, DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
 import { createStackNavigator } from '@react-navigation/stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
+import { Ionicons } from '@expo/vector-icons';
+
+import { AuthContext } from '../Tools/AuthContext';
+import { useTheme } from '../Tools/ThemeContext'; // ✅ using global theme
+import colors from '../Tools/theme';
+
 import NoticeScreen from '../Screens/NoticeScreen';
 import MapScreen from '../Screens/MapScreen';
 import ChatScreen from '../Screens/ChatScreen';
@@ -9,17 +19,11 @@ import ApplicationScreen from '../Screens/ApplicationScreen';
 import ProfileScreen from '../Screens/ProfileScreen';
 import SettingsScreen from '../Screens/SettingsScreen';
 import TermsOfServiceScreen from '../Screens/TermsOfServiceScreen';
-import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Ionicons } from '@expo/vector-icons';
-
-import React, { useContext } from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { AuthContext } from '../Tools/AuthContext';
 
 const Drawer = createDrawerNavigator();
 const Tab = createBottomTabNavigator();
 const AuthStack = createStackNavigator();
+const Stack = createStackNavigator();
 
 function AuthNavigator() {
   return (
@@ -30,53 +34,76 @@ function AuthNavigator() {
   );
 }
 
+function SettingsStack() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen name="SettingsScreen" component={SettingsScreen} />
+      <Stack.Screen name="TermsOfService" component={TermsOfServiceScreen} />
+    </Stack.Navigator>
+  );
+}
+
 function CustomDrawerContent(props) {
   const { logout } = useContext(AuthContext);
+  const { theme } = useTheme(); // ✅ using global theme
+  const themeColor = colors[theme];
+
   const navigation = props.navigation;
 
   return (
     <DrawerContentScrollView {...props}>
       <DrawerItem
         label="Home"
-        icon={({ color, size }) => <Ionicons name="home-outline" size={size} color={color} />}
+        labelStyle={{ color: themeColor.text }}
+        icon={({ size }) => <Ionicons name="home-outline" size={size} color={themeColor.accent} />}
         onPress={() => navigation.navigate('Notices')}
       />
       <DrawerItem
         label="Profile"
-        icon={({ color, size }) => <Ionicons name="person-outline" size={size} color={color} />}
+        labelStyle={{ color: themeColor.text }}
+        icon={({ size }) => <Ionicons name="person-outline" size={size} color={themeColor.accent} />}
         onPress={() => navigation.navigate('Profile')}
       />
       <DrawerItem
         label="Settings"
-        icon={({ color, size }) => <Ionicons name="settings-outline" size={size} color={color} />}
+        labelStyle={{ color: themeColor.text }}
+        icon={({ size }) => <Ionicons name="settings-outline" size={size} color={themeColor.accent} />}
         onPress={() => navigation.navigate('Settings')}
       />
       <DrawerItem
         label="Terms of Service"
-        icon={({ color, size }) => <Ionicons name="document-text-outline" size={size} color={color} />}
+        labelStyle={{ color: themeColor.text }}
+        icon={({ size }) => <Ionicons name="document-text-outline" size={size} color={themeColor.accent} />}
         onPress={() => navigation.navigate('TermsOfService')}
       />
       <DrawerItem
         label="Application"
-        icon={({ color, size }) => <Ionicons name="create-outline" size={size} color={color} />}
+        labelStyle={{ color: themeColor.text }}
+        icon={({ size }) => <Ionicons name="create-outline" size={size} color={themeColor.accent} />}
         onPress={() => navigation.navigate('ApplicationScreen')}
       />
-
-      {/* Logout Button */}
       <DrawerItem
         label="Logout"
-        icon={({ color, size }) => <Ionicons name="log-out-outline" size={size} color={color} />}
-        onPress={() => logout()}
+        labelStyle={{ color: themeColor.text }}
+        icon={({ size }) => <Ionicons name="log-out-outline" size={size} color="red" />}
+        onPress={logout}
       />
     </DrawerContentScrollView>
   );
 }
 
-// Tab Navigator for main screens
 function MainStack() {
+  const { theme } = useTheme(); // ✅ using global theme
+  const themeColor = colors[theme];
+
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
+        tabBarLabel: ({ focused }) => (
+          <Text style={{ color: focused ? themeColor.accent : themeColor.tabInactive, fontSize: 12 }}>
+            {route.name}
+          </Text>
+        ),
         tabBarIcon: ({ focused }) => {
           let iconName;
 
@@ -88,12 +115,18 @@ function MainStack() {
             iconName = focused ? 'chatbubble-ellipses' : 'chatbubble-ellipses-outline';
           }
 
-          const iconColor = focused ? 'blue' : 'gray';
-          const iconSize = focused ? 30 : 25;
-
-          return <Ionicons name={iconName} size={iconSize} color={iconColor} />;
+          return (
+            <Ionicons
+              name={iconName}
+              size={focused ? 28 : 24}
+              color={focused ? themeColor.accent : themeColor.tabInactive}
+            />
+          );
         },
         headerShown: false,
+        tabBarStyle: {
+          backgroundColor: themeColor.background,
+        },
       })}
     >
       <Tab.Screen name="Notices" component={NoticeScreen} />
@@ -103,31 +136,51 @@ function MainStack() {
   );
 }
 
-// Drawer Navigator
 function AppNavigator() {
+  const { theme } = useTheme(); // ✅ using global theme
+  const themeColor = colors[theme];
+
   return (
-    <Drawer.Navigator drawerContent={(props) => <CustomDrawerContent {...props} />}>
-      <Drawer.Screen name="Campus Connect" component={MainStack} />
+    <Drawer.Navigator
+      drawerContent={(props) => <CustomDrawerContent {...props} />}
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: themeColor.background,
+        },
+		headerTintColor: themeColor.text, // ✅ This changes the hamburger icon color
+        drawerActiveTintColor: themeColor.secondary,
+        drawerInactiveTintColor: themeColor.tabInactive,
+        drawerStyle: {
+          backgroundColor: themeColor.background,
+          width: 240,
+        },
+      }}
+    >
+      <Drawer.Screen name="Home" component={MainStack} />
       <Drawer.Screen name="Profile" component={ProfileScreen} />
-      <Drawer.Screen name="Settings" component={SettingsScreen} />
+      <Drawer.Screen name="Settings" component={SettingsStack} />
       <Drawer.Screen name="TermsOfService" component={TermsOfServiceScreen} />
       <Drawer.Screen name="ApplicationScreen" component={ApplicationScreen} />
-      <Drawer.Screen name="Authentication" component={AuthNavigator} />
     </Drawer.Navigator>
   );
 }
 
 function AppRootNavigator() {
   const { user } = useContext(AuthContext);
-  
-  console.log('User in RootNavigator:', user);
+  const { theme } = useTheme(); // ✅ using global theme
 
   return (
-    <NavigationContainer>
+    <>
+      <StatusBar
+        barStyle={theme === 'dark' ? 'light-content' : 'dark-content'}
+        backgroundColor="transparent"
+        translucent
+      />
+    <NavigationContainer theme={theme === 'dark' ? DarkTheme : DefaultTheme}>
       {user ? <AppNavigator /> : <AuthNavigator />}
     </NavigationContainer>
+	</>
   );
 }
-
 
 export default AppRootNavigator;
