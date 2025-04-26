@@ -53,6 +53,13 @@ function SignupScreen(props) {
         // Create user email-password firebase account
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
+        const uid = user.uid;
+        const userData = {
+          name,
+          email,
+          role: "user"
+        };
+        set(ref(database, 'users/' + uid), userData);
 
         // Send verification email
         await sendEmailVerification(user);
@@ -62,6 +69,9 @@ function SignupScreen(props) {
       catch (error) {
         if (error.message === 'Firebase: Error (auth/network-request-failed).') {
           Alert.alert('Signup Error', "Please ensure you are connected to the internet");
+        }
+        else if (error.message === 'Firebase: Error (auth/email-already-exists).') {
+          Alert.alert('Signup Error', "The email address you provided already has an account linked to it. If the account wasn't created by you, don't worry, for it wasn't in use as long as it didn't pass the email verification. Please contact the admin to have your account restored.");
         }
         else {
           Alert.alert('Signup Error', error.message);
@@ -78,14 +88,6 @@ function SignupScreen(props) {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user && verificationSent && user.emailVerified) {
-        const uid = user.uid;
-        const userData = {
-          name,
-          email,
-          role: "user"
-        };
-        set(ref(database, 'users/' + uid), userData);
-        
         Alert.alert("Verified", "Sign up successful!");
         navigation.navigate('Home');
       }
