@@ -1,4 +1,5 @@
-import React, { useContext } from 'react';
+// ./Navigation/AppNavigator.js
+import React, { useContext, useEffect, useState } from 'react'; 
 import { Text, StatusBar } from 'react-native';
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -7,10 +8,12 @@ import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/
 import { Ionicons } from '@expo/vector-icons';
 
 import { AuthContext } from '../Tools/AuthContext';
-import { useTheme } from '../Tools/ThemeContext'; // ✅ using global theme
+import { useTheme } from '../Tools/ThemeContext';
 import colors from '../Tools/theme';
 
+import SplashScreen from '../Screens/SplashScreen';
 import NoticeScreen from '../Screens/NoticeScreen';
+import CreateNoticeScreen from '../Screens/CreateNoticeScreen'; // ✅ Newly added
 import MapScreen from '../Screens/MapScreen';
 import ChatScreen from '../Screens/ChatScreen';
 import LoginScreen from '../Screens/LoginScreen';
@@ -19,6 +22,7 @@ import ApplicationScreen from '../Screens/ApplicationScreen';
 import ProfileScreen from '../Screens/ProfileScreen';
 import SettingsScreen from '../Screens/SettingsScreen';
 import TermsOfServiceScreen from '../Screens/TermsOfServiceScreen';
+import EmailVerificationPendingScreen from '../Screens/EmailVerificationPendingScreen';
 
 const Drawer = createDrawerNavigator();
 const Tab = createBottomTabNavigator();
@@ -30,6 +34,7 @@ function AuthNavigator() {
     <AuthStack.Navigator screenOptions={{ headerShown: true }}>
       <AuthStack.Screen name="Login" component={LoginScreen} />
       <AuthStack.Screen name="Signup" component={SignupScreen} />
+      <AuthStack.Screen name="EmailVerificationPending" component={EmailVerificationPendingScreen} />
     </AuthStack.Navigator>
   );
 }
@@ -44,11 +49,16 @@ function SettingsStack() {
 }
 
 function CustomDrawerContent(props) {
-  const { logout } = useContext(AuthContext);
-  const { theme } = useTheme(); // ✅ using global theme
+  const { logout, user } = useContext(AuthContext);  // Get user context
+  const { theme } = useTheme();
   const themeColor = colors[theme];
-
   const navigation = props.navigation;
+  const state = props.state;
+
+  const isRouteActive = (routeName) => {
+    const focusedRoute = state.routeNames[state.index];
+    return focusedRoute === routeName;
+  };
 
   return (
     <DrawerContentScrollView {...props}>
@@ -56,44 +66,86 @@ function CustomDrawerContent(props) {
         label="Home"
         labelStyle={{ color: themeColor.text }}
         icon={({ size }) => <Ionicons name="home-outline" size={size} color={themeColor.accent} />}
-        onPress={() => navigation.navigate('Notices')}
+        onPress={() => navigation.navigate('Home')}
+        style={{
+          backgroundColor: isRouteActive('Home') ? themeColor.card : 'transparent',
+          borderRadius: 10,
+          marginHorizontal: 5,
+        }}
       />
       <DrawerItem
         label="Profile"
         labelStyle={{ color: themeColor.text }}
         icon={({ size }) => <Ionicons name="person-outline" size={size} color={themeColor.accent} />}
         onPress={() => navigation.navigate('Profile')}
+        style={{
+          backgroundColor: isRouteActive('Profile') ? themeColor.card : 'transparent',
+          borderRadius: 10,
+          marginHorizontal: 5,
+        }}
       />
       <DrawerItem
         label="Settings"
         labelStyle={{ color: themeColor.text }}
         icon={({ size }) => <Ionicons name="settings-outline" size={size} color={themeColor.accent} />}
         onPress={() => navigation.navigate('Settings')}
+        style={{
+          backgroundColor: isRouteActive('Settings') ? themeColor.card : 'transparent',
+          borderRadius: 10,
+          marginHorizontal: 5,
+        }}
       />
       <DrawerItem
         label="Terms of Service"
         labelStyle={{ color: themeColor.text }}
         icon={({ size }) => <Ionicons name="document-text-outline" size={size} color={themeColor.accent} />}
         onPress={() => navigation.navigate('TermsOfService')}
+        style={{
+          backgroundColor: isRouteActive('TermsOfService') ? themeColor.card : 'transparent',
+          borderRadius: 10,
+          marginHorizontal: 5,
+        }}
       />
-      <DrawerItem
-        label="Application"
-        labelStyle={{ color: themeColor.text }}
-        icon={({ size }) => <Ionicons name="create-outline" size={size} color={themeColor.accent} />}
-        onPress={() => navigation.navigate('ApplicationScreen')}
-      />
+      {user?.role === 'creator' ? (
+        <DrawerItem
+          label="Create Notice"
+          labelStyle={{ color: themeColor.text }}
+          icon={({ size }) => <Ionicons name="add-circle-outline" size={size} color={themeColor.accent} />}
+          onPress={() => navigation.navigate('CreateNoticeScreen')}
+          style={{
+            backgroundColor: isRouteActive('CreateNoticeScreen') ? themeColor.card : 'transparent',
+            borderRadius: 10,
+            marginHorizontal: 5,
+          }}
+        />
+      ) : (
+        <DrawerItem
+          label="Application"
+          labelStyle={{ color: themeColor.text }}
+          icon={({ size }) => <Ionicons name="create-outline" size={size} color={themeColor.accent} />}
+          onPress={() => navigation.navigate('ApplicationScreen')}
+          style={{
+            backgroundColor: isRouteActive('ApplicationScreen') ? themeColor.card : 'transparent',
+            borderRadius: 10,
+            marginHorizontal: 5,
+          }}
+        />
+      )}
       <DrawerItem
         label="Logout"
-        labelStyle={{ color: themeColor.text }}
+        labelStyle={{ color: 'red' }}
         icon={({ size }) => <Ionicons name="log-out-outline" size={size} color="red" />}
         onPress={logout}
+        style={{
+          marginHorizontal: 5,
+        }}
       />
     </DrawerContentScrollView>
   );
 }
 
 function MainStack() {
-  const { theme } = useTheme(); // ✅ using global theme
+  const { theme } = useTheme();
   const themeColor = colors[theme];
 
   return (
@@ -106,7 +158,6 @@ function MainStack() {
         ),
         tabBarIcon: ({ focused }) => {
           let iconName;
-
           if (route.name === 'Map') {
             iconName = focused ? 'map' : 'map-outline';
           } else if (route.name === 'Notices') {
@@ -114,7 +165,6 @@ function MainStack() {
           } else if (route.name === 'ChatBot') {
             iconName = focused ? 'chatbubble-ellipses' : 'chatbubble-ellipses-outline';
           }
-
           return (
             <Ionicons
               name={iconName}
@@ -137,7 +187,8 @@ function MainStack() {
 }
 
 function AppNavigator() {
-  const { theme } = useTheme(); // ✅ using global theme
+  const { user } = useContext(AuthContext);  // Get user context
+  const { theme } = useTheme();
   const themeColor = colors[theme];
 
   return (
@@ -147,7 +198,7 @@ function AppNavigator() {
         headerStyle: {
           backgroundColor: themeColor.background,
         },
-		headerTintColor: themeColor.text, // ✅ This changes the hamburger icon color
+        headerTintColor: themeColor.text,
         drawerActiveTintColor: themeColor.secondary,
         drawerInactiveTintColor: themeColor.tabInactive,
         drawerStyle: {
@@ -161,13 +212,18 @@ function AppNavigator() {
       <Drawer.Screen name="Settings" component={SettingsStack} />
       <Drawer.Screen name="TermsOfService" component={TermsOfServiceScreen} />
       <Drawer.Screen name="ApplicationScreen" component={ApplicationScreen} />
+      <Drawer.Screen name="CreateNoticeScreen" component={CreateNoticeScreen} />
     </Drawer.Navigator>
   );
 }
 
 function AppRootNavigator() {
-  const { user } = useContext(AuthContext);
-  const { theme } = useTheme(); // ✅ using global theme
+  const { user, isLoading } = useContext(AuthContext);
+  const { theme } = useTheme();
+
+  if (isLoading) {
+    return <SplashScreen />; // 🚀 Show Splash screen while loading
+  }
 
   return (
     <>
@@ -176,10 +232,10 @@ function AppRootNavigator() {
         backgroundColor="transparent"
         translucent
       />
-    <NavigationContainer theme={theme === 'dark' ? DarkTheme : DefaultTheme}>
-      {user ? <AppNavigator /> : <AuthNavigator />}
-    </NavigationContainer>
-	</>
+      <NavigationContainer theme={theme === 'dark' ? DarkTheme : DefaultTheme}>
+        {user ? <AppNavigator /> : <AuthNavigator />}
+      </NavigationContainer>
+    </>
   );
 }
 

@@ -1,14 +1,9 @@
 import './gesture-handler';
-//import { StatusBar } from 'expo-status-bar';
-//import { StyleSheet, Text, View } from 'react-native';
 import React, { useEffect } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-//import 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-//import SignupScreen from './Screens/SignupScreen';
-import WelcomeScreen from './Screens/WelcomeScreen';
 import AboutScreen from './Screens/AboutScreen'
 import AppRootNavigator from './Navigation/AppNavigator';
 import { ThemeProvider } from './Tools/ThemeContext';

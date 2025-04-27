@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
   SafeAreaView, StyleSheet, View, TextInput, FlatList,
   Text, KeyboardAvoidingView, Platform, TouchableOpacity, ActivityIndicator, Image
@@ -10,6 +10,7 @@ import new_coordinates from "../MapAssets/new_coordinates.json";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTheme } from '../Tools/ThemeContext';
 import themeColors from '../Tools/theme';
+import { AuthContext } from '../Tools/AuthContext'; // ⬅️ New
 
 const genAI = new GoogleGenerativeAI("AIzaSyAd5oMMQ0Wc08u3SOB_3OR4jLjyuO47TTQ");
 
@@ -17,6 +18,7 @@ const ChatScreen = () => {
   const navigation = useNavigation();
   const { theme } = useTheme();
   const colors = themeColors[theme];
+  const { user } = useContext(AuthContext); // ⬅️ New
 
   const [messages, setMessages] = useState([]);
   const [inputText, setInputText] = useState('');
@@ -33,21 +35,39 @@ const ChatScreen = () => {
     return () => unsubscribe();
   }, []);
 
+  // Load chat history when user changes
   useEffect(() => {
-    loadChatHistory();
-  }, []);
+    if (user) {
+      loadChatHistory();
+    } else {
+      setMessages([]); // clear messages if no user
+    }
+  }, [user]);
 
+  // Save chat history whenever messages change
   useEffect(() => {
-    saveChatHistory();
+    if (user) {
+      saveChatHistory();
+    }
   }, [messages]);
 
   const loadChatHistory = async () => {
-    const saved = await AsyncStorage.getItem('chatHistory');
-    if (saved) setMessages(JSON.parse(saved));
+    try {
+      const saved = await AsyncStorage.getItem(`chatHistory_${user.uid}`);
+      if (saved) {
+        setMessages(JSON.parse(saved));
+      }
+    } catch (error) {
+      console.error('Error loading chat history:', error);
+    }
   };
 
   const saveChatHistory = async () => {
-    await AsyncStorage.setItem('chatHistory', JSON.stringify(messages));
+    try {
+      await AsyncStorage.setItem(`chatHistory_${user.uid}`, JSON.stringify(messages));
+    } catch (error) {
+      console.error('Error saving chat history:', error);
+    }
   };
 
   const findLocation = (query) => {

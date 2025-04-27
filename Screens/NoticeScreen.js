@@ -10,7 +10,6 @@ import {
   SafeAreaView,
   TextInput,
   Image,
-  Animated,
 } from 'react-native';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { ref, onValue, database } from '../Firebase/firebase';
@@ -47,13 +46,33 @@ function NoticeScreen() {
 
   const isExpired = (expiryDate) => new Date(expiryDate) < new Date();
 
+  const isOlderThanDays = (expiryDate, days) => {
+    const expiry = new Date(expiryDate);
+    const now = new Date();
+    const differenceInMs = now - expiry;
+    const differenceInDays = differenceInMs / (1000 * 60 * 60 * 24);
+    return differenceInDays > days;
+  };
+
   const getFilteredSortedNotices = () => {
-    let filtered = notices.filter(n => isExpired(n.expiryDate) === (activeTab === 'expired'));
+    let filtered = notices.filter(n => {
+      const expired = isExpired(n.expiryDate);
+      if (activeTab === 'ongoing') {
+        return !expired;
+      } else {
+        return expired && !isOlderThanDays(n.expiryDate, 7);
+      }
+    });
 
     if (filterBy.trim()) {
-      filtered = filtered.filter(n =>
-        n.postedBy.toLowerCase().includes(filterBy.toLowerCase())
-      );
+      filtered = filtered.filter(n => {
+        const tags = n.tags || [];
+        const search = filterBy.toLowerCase();
+        return (
+          n.postedBy?.toLowerCase().includes(search) ||
+          tags.some(tag => tag.toLowerCase().includes(search))
+        );
+      });
     }
 
     switch (sortOption) {
@@ -84,10 +103,22 @@ function NoticeScreen() {
               <Text style={styles.title}>{selectedNotice.title}</Text>
               <Text style={styles.date}>{selectedNotice.datePosted}</Text>
               <Text style={styles.description}>{selectedNotice.description}</Text>
-              <Text style={styles.description}>Date: {selectedNotice.date}</Text>
-              <Text style={styles.description}>Time: {selectedNotice.time}</Text>
+              <Text style={styles.description}>Date: {selectedNotice.eventDate}</Text>
+              <Text style={styles.description}>Time: {selectedNotice.eventTime}</Text>
               <Text style={styles.description}>Venue: {selectedNotice.venue}</Text>
               <Text style={styles.postedBy}>Posted by: {selectedNotice.postedBy}</Text>
+
+              {/* Show tags if they exist */}
+              {selectedNotice.tags && selectedNotice.tags.length > 0 && (
+                <View style={styles.tagsContainer}>
+                  {selectedNotice.tags.map((tag, index) => (
+                    <View key={index} style={styles.tag}>
+                      <Text style={styles.tagText}>#{tag}</Text>
+                    </View>
+                  ))}
+                </View>
+              )}
+
               {selectedNotice.image && (
                 <Image source={{ uri: selectedNotice.image }} style={styles.detailImage} />
               )}
@@ -112,7 +143,7 @@ function NoticeScreen() {
                 key={tab}
                 style={[
                   styles.tab,
-                  activeTab === tab && { backgroundColor: colors[theme].primary }
+                  activeTab === tab && { backgroundColor: colors[theme].selected }
                 ]}
                 onPress={() => setActiveTab(tab)}
               >
@@ -122,6 +153,15 @@ function NoticeScreen() {
               </TouchableOpacity>
             ))}
           </View>
+
+          {/* Expired Warning */}
+          {activeTab === 'expired' && (
+            <View style={{ marginVertical: 10, backgroundColor: colors[theme].card, padding: 10, borderRadius: 8 }}>
+              <Text style={{ color: colors[theme].text, fontSize: 14 }}>
+                ⚠️ Notices expire and are automatically removed 7 days after their expiry date.
+              </Text>
+            </View>
+          )}
 
           {/* Icon Controls */}
           <View style={styles.iconRow}>
@@ -136,7 +176,7 @@ function NoticeScreen() {
           {/* Filter Input */}
           {showFilters && (
             <TextInput
-              placeholder="Filter by 'Posted by'..."
+              placeholder="Search by poster or tag..."
               placeholderTextColor={colors[theme].placeholder}
               style={styles.searchInput}
               value={filterBy}
@@ -275,11 +315,28 @@ const getStyles = (theme) =>
       fontSize: 12,
       fontStyle: 'italic',
       color: theme.accent,
+      marginTop: 5,
     },
     detailImage: {
       width: '100%',
       height: 200,
       borderRadius: 5,
       marginTop: 10,
+    },
+    tagsContainer: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      marginTop: 10,
+      gap: 8,
+    },
+    tag: {
+      backgroundColor: theme.accent,
+      borderRadius: 20,
+      paddingHorizontal: 12,
+      paddingVertical: 5,
+    },
+    tagText: {
+      fontSize: 12,
+      color: theme.textOnAccent || '#fff',
     },
   });

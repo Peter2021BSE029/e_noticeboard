@@ -16,6 +16,9 @@ light: {
   timestamp: '#e3e3e3',
   sortbuttonsSelected: '#3aa663',
   sortbuttons: '#E0F2F1',
+  selected: '#3aa663',
+  border: 'grey',
+  inputBackground: '#E0F2F1',
 },
 dark: {
   background: '#303138',
@@ -33,6 +36,9 @@ dark: {
   timestamp: 'grey',
   sortbuttonsSelected: '#81C784',
   sortbuttons: '#1E1E1E',
+  selected: '#3aa663',
+  border: 'grey',
+  inputBackground: '#1E1E1E',
 }
 }
 export default colors;

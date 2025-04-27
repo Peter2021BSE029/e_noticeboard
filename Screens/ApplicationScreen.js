@@ -10,6 +10,7 @@ import {
   Platform,
   Alert,
   Linking,
+  Image,
 } from 'react-native';
 import { useTheme } from '../Tools/ThemeContext';
 import colors from '../Tools/theme';
@@ -18,7 +19,10 @@ import { ref, set, onValue } from 'firebase/database';
 import { database } from '../Firebase/firebase';
 import Checkbox from 'expo-checkbox';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { useNavigation, createStaticNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
+import * as ImagePicker from 'expo-image-picker';
+import uuid from 'react-native-uuid';
+import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 const ApplicationScreen = () => {
   const { theme } = useTheme();
@@ -28,30 +32,28 @@ const ApplicationScreen = () => {
   const navigation = useNavigation();
   
   const [userEmail, setUserEmail] = useState('');
-
   const [reason, setReason] = useState('');
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [alreadyApplied, setAlreadyApplied] = useState(false);
 
-  // Optional fields
   const [dob, setDob] = useState('');
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [phone, setPhone] = useState('');
   const [socialLink, setSocialLink] = useState('');
   const [contentTypes, setContentTypes] = useState([]);
+  const [idPicture, setIdPicture] = useState(null); // state to store the ID picture
 
   const contentOptions = ['News', 'Events', 'Tutorials', 'Campus Vibes', 'Lost & Found'];
 
   useEffect(() => {
     if (user?.uid) {
-		
-    const userRef = ref(database, `users/${user.uid}`);
-    onValue(userRef, (snapshot) => {
-      const data = snapshot.val();
-      if (data) {
-        setUserEmail(data.email);
-      }
-    });
+      const userRef = ref(database, `users/${user.uid}`);
+      onValue(userRef, (snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+          setUserEmail(data.email);
+        }
+      });
 
       const applicationRef = ref(database, `applications/${user.uid}`);
       onValue(applicationRef, (snapshot) => {
@@ -83,6 +85,55 @@ const ApplicationScreen = () => {
     }
   };
 
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      quality: 1,
+    });
+
+    if (!result.cancelled) {
+      setIdPicture(result.uri); // Set the image URI to the state
+    }
+  };
+  
+  const handleImagePick = async () => {
+    const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (permission.granted) {
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        quality: 1,
+        allowsEditing: true,
+      });
+
+      if (!result.canceled) {
+        const { uri } = result.assets[0];
+        setIdPicture(uri);
+      }
+    } else {
+      Alert.alert('Permission denied', 'You need to grant access to your photos to upload an ID picture.');
+    }
+  };
+  
+  const uploadImage = async () => {
+    if (!idPicture) return null;
+
+    const imageId = uuid.v4(); // Generate a unique ID for the image
+    const response = await fetch(idPicture);
+    const blob = await response.blob();
+    const storage = getStorage();
+    const storagePath = storageRef(storage, `id-images/${imageId}.jpg`);
+
+    try {
+      const uploadResult = await uploadBytes(storagePath, blob);
+      const downloadUrl = await getDownloadURL(uploadResult.ref);
+      return downloadUrl;
+    } catch (error) {
+      console.error('Image upload failed', error);
+      return null;
+    }
+  };
+
   const handleSubmit = async () => {
     if (!reason.trim()) {
       Alert.alert('Error', 'Please provide a reason for applying.');
@@ -92,8 +143,15 @@ const ApplicationScreen = () => {
     if (!acceptedTerms) {
       return;
     }
+	
+    if (!idPicture) {
+      Alert.alert('Error', 'Please upload your ID picture.');
+      return;
+    }
 
     try {
+      let uploadedImageUrl = await uploadImage();
+
       const applicationData = {
         name: user?.name || '',
         email: userEmail,
@@ -105,6 +163,7 @@ const ApplicationScreen = () => {
         contentTypes,
         status: 'pending',
         createdAt: Date.now(),
+        idPicture: uploadedImageUrl || null,
       };
 
       await set(ref(database, `applications/${user?.uid}`), applicationData);
@@ -142,8 +201,6 @@ const ApplicationScreen = () => {
           multiline
         />
 
-        <Text style={[styles.label, { color: colorScheme.text }]}>Optional Info</Text>
-
         <TouchableOpacity
           onPress={() => setShowDatePicker(true)}
           style={[styles.input, {
@@ -152,7 +209,7 @@ const ApplicationScreen = () => {
           }]}
         >
           <Text style={{ color: dob ? colorScheme.text : colorScheme.placeholder }}>
-            {dob || 'Select Date of Birth'}
+            {dob || 'Select Date of Birth (optional)'}
           </Text>
         </TouchableOpacity>
 
@@ -166,7 +223,7 @@ const ApplicationScreen = () => {
         )}
 
         <TextInput
-          placeholder="Phone Number"
+          placeholder="Phone Number (optional)"
           placeholderTextColor={colorScheme.placeholder}
           value={phone}
           onChangeText={setPhone}
@@ -206,6 +263,19 @@ const ApplicationScreen = () => {
           </TouchableOpacity>
         ))}
 
+        {/* Image Picker Button */}
+        <TouchableOpacity
+          onPress={handleImagePick} // Image picker button
+          style={[styles.input, {
+            backgroundColor: colorScheme.inputBackground,
+            borderColor: colorScheme.border
+          }]}
+        >
+          <Text style={{ color: idPicture ? colorScheme.text : colorScheme.placeholder }}>
+            {idPicture ? 'ID Picture Selected' : 'Upload ID Picture (Required)'}
+          </Text>
+        </TouchableOpacity>
+
         <View style={styles.checkboxContainer}>
           <Checkbox
             value={acceptedTerms}
@@ -224,12 +294,7 @@ const ApplicationScreen = () => {
         </View>
 
         <TouchableOpacity
-          style={[
-            styles.submitButton,
-            {
-              backgroundColor: acceptedTerms ? colorScheme.accent : 'gray',
-            }
-          ]}
+          style={[styles.submitButton, { backgroundColor: acceptedTerms ? colorScheme.accent : 'gray' }]}
           onPress={handleSubmit}
           disabled={!acceptedTerms}
         >
@@ -289,5 +354,16 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     fontWeight: '600',
+  },
+  imagePickerContainer: {
+    marginBottom: 15,
+  },
+  imagePreview: {
+    width: 100,
+    height: 100,
+    marginTop: 10,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#ddd',
   },
 });
