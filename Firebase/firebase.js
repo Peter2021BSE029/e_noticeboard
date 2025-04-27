@@ -3,15 +3,16 @@ import {getDatabase, ref, push, set, get, onValue, update, remove} from "firebas
 import {getStorage, ref as storageRef, uploadBytes, getDownloadURL} from "firebase/storage";
 import {getAuth, createUserWithEmailAndPassword, initializeAuth, getReactNativePersistence, signInWithEmailAndPassword, sendEmailVerification, onAuthStateChanged} from "firebase/auth";
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
+import { API_KEY, AUTH_DOMAIN, DATABASE_URL, PROJECT_ID, STORAGE_BUCKET, MESSAGING_SENDER_ID, APP_ID } from '@env';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyD0SmSOa8Al0v4ObHiJfct3I8BZFnnFhDg",
-  authDomain: "campus-map-3ecef.firebaseapp.com",
-  databaseURL: "https://campus-map-3ecef-default-rtdb.firebaseio.com",
-  projectId: "campus-map-3ecef",
-  storageBucket: "campus-map-3ecef.firebasestorage.app",
-  messagingSenderId: "400714085619",
-  appId: "1:400714085619:web:c3a7ddde7c223f0d5df386"
+  apiKey: API_KEY,
+  authDomain: AUTH_DOMAIN,
+  databaseURL: DATABASE_URL,
+  projectId: PROJECT_ID,
+  storageBucket: STORAGE_BUCKET,
+  messagingSenderId: MESSAGING_SENDER_ID,
+  appId: APP_ID,
 };
 
 const app = initializeApp(firebaseConfig);
